@@ -1,13 +1,21 @@
-import React, { useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Dimensions, Easing } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withSpring,
   withSequence,
+  Easing,
+  runOnJS
 } from 'react-native-reanimated';
-import Svg, { Path } from 'react-native-svg';
+
+import Svg, {
+  Path,
+  Defs,
+  LinearGradient,
+  Stop
+} from 'react-native-svg';
 
 const { height } = Dimensions.get('window');
 
@@ -36,6 +44,7 @@ export default function Petal({
   const opacity = useSharedValue(1);
   const rotation = useSharedValue(0);
   const scale = useSharedValue(1);
+  const [shouldRender, setShouldRender] = useState(true);
 
   const PETAL_WIDTH = daisySize * 0.12;
   const PETAL_HEIGHT = daisySize * 0.2;
@@ -71,6 +80,8 @@ export default function Petal({
         opacity.value = withTiming(0, {
           duration: 2000,
           easing: Easing.out(Easing.quad),
+        }, () => {
+          runOnJS(setShouldRender)(false);
         });
       }, 1500);
     }
@@ -97,7 +108,7 @@ export default function Petal({
     opacity: opacity.value,
   }));
 
-  if (isPlucked && opacity.value === 0) return null;
+  if (!shouldRender) return null;
 
   return (
     <AnimatedTouchableOpacity
@@ -113,19 +124,13 @@ export default function Petal({
           stroke="#E91E63"
           strokeWidth="0.5"
         />
-        <defs>
-          <linearGradient
-            id="petalGradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="#FDF2F8" />
-            <stop offset="50%" stopColor="#F8BBD9" />
-            <stop offset="100%" stopColor="#EC4899" />
-          </linearGradient>
-        </defs>
+        <Defs>
+          <LinearGradient id="petalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <Stop offset="0%" stopColor="#FDF2F8" />
+            <Stop offset="50%" stopColor="#F8BBD9" />
+            <Stop offset="100%" stopColor="#EC4899" />
+          </LinearGradient>
+        </Defs>
       </Svg>
     </AnimatedTouchableOpacity>
   );

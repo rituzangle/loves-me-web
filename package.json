@@ -43,7 +43,7 @@
     "expo-haptics": "~14.1.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.5",
-    "expo-router": "~5.1.0",
+    "expo-router": "^5.1.0",
     "expo-splash-screen": "~0.30.9",
     "expo-status-bar": "~2.2.3",
     "expo-system-ui": "~5.0.9",
@@ -73,6 +73,8 @@
     "metro-react-native-babel-transformer": "^0.77.0",
     "react-test-renderer": "18.3.1",
     "ts-node": "^10.9.2",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~9.2.0"
   }
 }
