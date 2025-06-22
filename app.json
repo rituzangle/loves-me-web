@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Loves Me, Loves Me Not",
+    "slug": "loves-me-loves-me-not",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "lovesme",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.lovesmelovesmenot"
+    },
+    "jsEngine": "hermes",
+    "experiments": {
+      "turboModules": true,
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.anonymous.lovesmelovesmenot"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
+  }
+}
