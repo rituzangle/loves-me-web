@@ -32,10 +32,6 @@ export default function GameScreen() {
   const [startingPhrase, setStartingPhrase] = useState<'loves-me' | 'loves-me-not'>('loves-me');
   const [gameId, setGameId] = useState(0); // 🔄 Used to remount the daisy
 
-  const [playCount, setPlayCount] = useState(0);
-  const [lovesMeCount, setLovesMeCount] = useState(0);
-  const [lovesMeNotCount, setLovesMeNotCount] = useState(0);
-
   const centerScale = useSharedValue(1);
   const titleOpacity = useSharedValue(1);
 
@@ -85,13 +81,6 @@ export default function GameScreen() {
     setPetalCount(remainingPetals);
 
     if (remainingPetals === 0) {
-      setPlayCount(prev => prev + 1);
-      if (currentPhrase === 'loves-me') {
-        setLovesMeCount(prev => prev + 1);
-      } else {
-        setLovesMeNotCount(prev => prev + 1);
-      }
-
       setTimeout(() => {
         setGameState(currentPhrase);
         centerScale.value = withSequence(
@@ -154,12 +143,6 @@ export default function GameScreen() {
             </Text>
           </>
         )}
-      </View>
-
-      <View style={styles.tallyContainer}>
-        <Text style={{ fontSize: 14, color: '#6B7280', fontFamily: 'Poppins-Regular', textAlign: 'center' }}>
-          ❤️ Played: {playCount} | 💘 Loves Me: {lovesMeCount} | 💔 Loves Me Not: {lovesMeNotCount}
-        </Text>
       </View>
 
       <View style={styles.gameArea}>
@@ -298,11 +281,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
-  },
-  tallyContainer: {
-    marginTop: 10,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-    alignItems: 'center',
   },
 });

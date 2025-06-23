@@ -15,6 +15,6 @@
       "**/*.tsx",
       ".expo/types/**/*.ts",
       "expo-env.d.ts"
-, "app/(tabs)/about.tsx_err_sav"    ]
+     ]
   }
   
