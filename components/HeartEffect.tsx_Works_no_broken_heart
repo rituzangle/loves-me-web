@@ -1,12 +1,15 @@
 // 🪄 HeartEffect.tsx - A whimsical celebration of love, longing, and glittery resilience
+
 // 💘 Celebration mode:
 //  - Spring-loaded heart + heartbeat pulse
 //  - Floating hearts drifting upward
 //  - 5 randomized sparkles shimmering around the heart
-// 💔 Broken heart mode:
+
+// 💔 Broken mode:
 //  - Cracked heart fall
 //  - 🌱 sprout grows from the ground
 //  - A random quip offers playful encouragement
+
 // 🔮 magic: random timing, sparkle loops, web-safe animations
 
 import React, { useEffect, useState } from 'react';
@@ -31,19 +34,18 @@ const AnimatedHeartCrack = Animated.createAnimatedComponent(HeartCrack);
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const quips = [
-  "A '🪢' today doesn’t mean never.🪢",
+  'A ‘not’ today doesn’t mean never. 🌱',
   'Even daisies get it wrong sometimes. 🍃',
-  "Your story’s just flipping to the next page... 📖",
+  'Your story’s just flipping to the next page... 📖',
   'Try again. Your destiny took a coffee break. ☕✨',
-  '404: Love outcome not found. 🌥️',
-  'This daisy had commitment issues. 😬',
+  '404: Love outcome not found. 💾❌',
+  'The daisy has commitment issues. 🌼😬',
   'Ugh. Typical flower drama. 🌸🥲',
   'Denied. But you look amazing. 👀💅',
-  'Some answers need a second try. ',
-  'Silence is still an answer. 🎤',
-  'Every ‘not’ shapes your ‘yes’. 😈',
-  'The petal union’s still voting. 🗳️',
-  "Itsy bitsy 🕷️ says: Let's try again.",
+  'Some answers need a second try. 🔄',
+  'Silence is still an answer. 🎤🌼',
+  'Every ‘not’ shapes your ‘yes’. 🧩',
+  'The petal union’s still voting. 🗳️🌼',
 ];
 
 export default function HeartEffect({ type }: HeartEffectProps) {
@@ -80,43 +82,12 @@ export default function HeartEffect({ type }: HeartEffectProps) {
   }));
 
   const floatEase = Easing.inOut(Easing.ease);
-  // if heart broken => "loves me not hit"
+
   useEffect(() => {
-  if (type === 'broken') {
-    const pick = quips[Math.floor(Math.random() * quips.length)];
-    setQuip(pick);
-  
-    mainHeartScale.value = withSpring(1.2, {
-      damping: 8,
-      stiffness: 200,
-    });
-  
-    setTimeout(() => {
-      mainHeartY.value = withTiming(200, {
-        duration: 1500,
-        easing: Easing.in(Easing.quad),
-      });
-  
-      mainHeartRotation.value = withTiming(45, {
-        duration: 1500,
-        easing: Easing.in(Easing.quad),
-      });
-  
-      mainHeartOpacity.value = withTiming(0.3, {
-        duration: 1500,
-        easing: Easing.out(Easing.quad),
-      });
-  
-      reassuranceOpacity.value = withTiming(1, {
-        duration: 1200,
-        delay: 0,
-        easing: Easing.out(Easing.quad),
-      });
-  
-      sproutY.value = withTiming(-30, { duration: 1200 });
-      sproutOpacity.value = withTiming(1, { duration: 800 });
-    }, 800);
-  }
+    if (type === 'broken') {
+      const pick = quips[Math.floor(Math.random() * quips.length)];
+      setQuip(pick);
+    }
     else {
     // 💘 Celebration animation
     mainHeartScale.value = withSpring(1, { damping: 12, stiffness: 150 });
@@ -201,7 +172,7 @@ export default function HeartEffect({ type }: HeartEffectProps) {
 
   const reassuranceStyle = useAnimatedStyle(() => ({
     opacity: reassuranceOpacity.value,
-    transform: [{ translateY: 30 }],
+    transform: [{ translateY: -10 }],
   }));
 
   const sproutStyle = useAnimatedStyle(() => ({
@@ -257,17 +228,14 @@ export default function HeartEffect({ type }: HeartEffectProps) {
       }
 
       {/* Quip + Sprout on heartbreak */}
-     {type === 'broken' && (
-      <View style={styles.quipWrapper}>
-        <AnimatedText style={[styles.reassuranceText, reassuranceStyle]}>
-          <Text style={{ marginLeft: -90, marginTop: -150 }}>{quip}</Text>
-        </AnimatedText>
-        <AnimatedText style={[styles.sprout, sproutStyle]}>
-          🌱
-        </AnimatedText>
-
-      </View>
-    )} {/* End of broken heart bit*/}
+      {type === 'broken' &&
+        <>
+          <AnimatedText style={[styles.reassuranceText, reassuranceStyle]}>
+            {quip}
+          </AnimatedText>
+          <AnimatedText style={[styles.sprout, sproutStyle]}>🌱</AnimatedText>
+        </>
+      }
     </View>
   );
 }
@@ -292,45 +260,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-    quipWrapper: {
-        bottom: 20,
-        transform: [{ translateX: -100 }],
-        transform: [{ translateY: 50 }],
-        //width: '100%',
-        alignItems: 'center',
-    },
-reassuranceText: {
-  fontSize: 18,
-  fontFamily: 'Poppins-Regular',
-  color: '#6B7280',
-  // textAlign: 'left',
-  //lineHeight: 28,
-},
-
-sprout: {
-  fontSize: 44,
-  marginTop: 116,
-  textAlign: 'center',
-},
-
-  // OLD reassuranceText: {
-  //left: '1%', width: '124%',
-  //fontSize: 24,
- // fontFamily: 'Poppins-Italic',
- // color: '#6B7280',
-   // bottom: '-12%',
-  //textAlign: 'left',
- // lineHeight: 22,
-    //alignSelf: 'left',
-//},
-  // sprout: {
-   //  position: 'absolute',
-    // justifyContent: 'centre',
-   //  bottom: '-150%',
-  //   fontSize: 100,
-  //   textAlign: 'center',
- //  }, //End Sprout
-
+  reassuranceText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Italic',
+    color: '#6B7280',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  sprout: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 4,
+  },
   sparkle: {
     fontSize: 22,
     zIndex: 9000,

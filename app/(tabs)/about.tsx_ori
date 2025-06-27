@@ -1,58 +1,55 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Linking, TouchableOpacity} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Heart, Flower } from 'lucide-react-native';
 
 export default function AboutScreen() {
   const openWikiLink = () => {
-    const url = 'https://en.wikipedia.org/wiki/He_loves_me..._he_loves_me_not';
-    if (Platform.OS === 'web') {
-      window.open(url, '_blank');
-    } else {
-      Linking.openURL(url);
-    }
+    Linking.openURL('https://en.wikipedia.org/wiki/He_loves_me..._he_loves_me_not#');
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        colors={['#FDF2F8', '#FCE7F3', '#FBBF24']}
-        style={StyleSheet.absoluteFillObject}
-      />
-      
-      <ScrollView contentContainerStyle={styles.content}>
+    <LinearGradient
+      colors={['#FDF2F8', '#FCE7F3', '#FBBF24']}
+      style={StyleSheet.absoluteFillObject}
+    />
+    
+    <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Flower size={48} color="#E11D48" />
           <Text style={styles.title}>About the Game</Text>
         </View>
-
+        {/* How to Play Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>How to Play</Text>
           <Text style={styles.text}>
-            To 'pluck' a petal, tap on it. 
-            Each pluck alternates between "Loves Me" and "Loves Me Not". 
-            The final petal shall reveal the answer to your heart's question!
+            Tap on each petal of the daisy to pluck it while alternating between "Loves Me" and "Loves Me Not". 
+            The final petal will reveal the answer to your heart's question!
           </Text>
         </View>
-
+        {/* Tradition Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>The Tradition</Text>
           <Text style={styles.text}>
             This timeless game of chance has been played for generations. Legend says that the daisy holds the truth 
-            about love, and its petals can reveal the feelings of your heart's desire.{' '}
+            about love, and its petals can reveal the feelings of your heart's desire. 
+            Must be true! Afterall, there's a{' '}
             <Text style={styles.link} onPress={openWikiLink}>
-              Yes its legendary. Afterall there is a Wikipedia page about it! ;)
-            </Text>
+              Wikipedia
+            </Text>{' '}
+            page about it!
           </Text>
         </View>
 
+         {/* Game Features Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Game Features</Text>
           <View style={styles.featureList}>
             <View style={styles.feature}>
               <Heart size={16} color="#E11D48" />
-              <Text style={styles.featureText}>Randomized petal count (8-33 petals)</Text>
+              <Text style={styles.featureText}>Randomized petal count (8-16 petals)</Text>
             </View>
             <View style={styles.feature}>
               <Heart size={16} color="#E11D48" />
@@ -66,14 +63,13 @@ export default function AboutScreen() {
               <Heart size={16} color="#E11D48" />
               <Text style={styles.featureText}>Haptic feedback on supported devices</Text>
             </View>
-          </View>
-        </View>
-
+        {/* Last Section */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
             Made with 💕 for hopeless romantics everywhere
           </Text>
         </View>
+      </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -120,11 +116,6 @@ const styles = StyleSheet.create({
     color: '#374151',
     lineHeight: 24,
   },
-  link: {
-    color: '#E11D48',
-    textDecorationLine: 'underline',
-    fontFamily: 'Poppins-Medium',
-  },
   featureList: {
     marginTop: 10,
   },
@@ -150,5 +141,11 @@ const styles = StyleSheet.create({
     fontFamily: 'DancingScript-Regular',
     color: '#BE185D',
     textAlign: 'center',
+  },
+  link: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    color: '#2563EB',
+    textDecorationLine: 'underline',
   },
 });
