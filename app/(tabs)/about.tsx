@@ -42,7 +42,7 @@ export default function AboutScreen() {
             This timeless game of chance has been played for generations. Legend says that the daisy holds the truth 
             about love, and its petals can reveal the feelings of your heart's desire.{' '}
             <Text style={styles.link} onPress={openWikiLink}>
-              Yes its legendary. Afterall there is a Wikipedia page about it! ;)
+            {'/n'}Yes its legendary. Afterall there is a Wikipedia page about it! ;)
             </Text>
           </Text>
         </View>
