@@ -23,7 +23,11 @@
     "pkg:validate": "node scripts/monitor-package.js validate",
     "pkg:fix": "node scripts/monitor-package.js restore",
     "build": "expo export -p web",
-    "start:tunnel": "expo start --tunnel --no-global-ngrok"
+    "start:tunnel": "expo start --tunnel --no-global-ngrok",
+    "vercel-build": "expo export -p web",
+    "build": "expo export -p web",
+    "vercel-build": "expo export -p web"
+  
   },
   "jest": {
     "preset": "jest-expo"
