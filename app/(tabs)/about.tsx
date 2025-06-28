@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Linking, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Heart, Flower } from 'lucide-react-native';
+import { Heart} from 'lucide-react-native';
 
 export default function AboutScreen() {
   const openWikiLink = () => {
@@ -23,7 +23,7 @@ export default function AboutScreen() {
       
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Flower size={48} color="#E11D48" />
+          
           <Text style={styles.title}>About the Game</Text>
         </View>
 
@@ -40,9 +40,10 @@ export default function AboutScreen() {
           <Text style={styles.sectionTitle}>The Tradition</Text>
           <Text style={styles.text}>
             This timeless game of chance has been played for generations. Legend says that the daisy holds the truth 
-            about love, and its petals can reveal the feelings of your heart's desire.{' '}
+            about love, and its petals can reveal the feelings of your heart's desire. Of course its legendary! {' '}
+            {"\n"}
             <Text style={styles.link} onPress={openWikiLink}>
-            {'/n'}Yes its legendary. Afterall there is a Wikipedia page about it! ;)
+            Afterall, there is a Wikipedia page about it!
             </Text>
           </Text>
         </View>
@@ -51,29 +52,41 @@ export default function AboutScreen() {
           <Text style={styles.sectionTitle}>Game Features</Text>
           <View style={styles.featureList}>
             <View style={styles.feature}>
-              <Heart size={16} color="#E11D48" />
-              <Text style={styles.featureText}>Randomized petal count (8-33 petals)</Text>
+              <Heart size={14} color="#E11D48" />
+              <Text style={styles.featureText}>Random Petal count (8-33 petals)</Text>
             </View>
             <View style={styles.feature}>
-              <Heart size={16} color="#E11D48" />
+              <Heart size={14} color="#E11D48" />
+              <Text style={styles.featureText}>Randomized beginnings.</Text>
+            </View>
+            <View style={styles.feature}>
+              <Heart size={14} color="#E11D48" />
               <Text style={styles.featureText}>Smooth petal-plucking animations</Text>
             </View>
             <View style={styles.feature}>
-              <Heart size={16} color="#E11D48" />
+              <Heart size={14} color="#E11D48" />
               <Text style={styles.featureText}>Celebration effects for happy endings</Text>
             </View>
             <View style={styles.feature}>
-              <Heart size={16} color="#E11D48" />
-              <Text style={styles.featureText}>Haptic feedback on supported devices</Text>
+              <Heart size={14} color="#E11D48" />
+              <Text style={styles.featureText}>A not very naughty nudge otherwise.</Text>
+            </View>
+            <View style={styles.feature}>
+              <Heart size={14} color="#E11D48" />
+              <Text style={styles.featureText}>Game Stats/ Tally</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Made with 💕 for hopeless romantics everywhere
+            Made with 💕 for hopeless romantics everywhere. {"\n"}
+          © 2025 Ritu Sangha (ritusbooks.com).{"\n"}
+          All rights reserved. {"\n"}
+            No 🧚🏼🧚🏼‍♀️ pixels, or petals were intentionally harmed.
           </Text>
-        </View>
+          
+        </View> 
       </ScrollView>
     </SafeAreaView>
   );

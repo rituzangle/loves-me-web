@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Download, Github, Settings } from 'lucide-react-native';
+// Removed: Download, Github from 'lucide-react-native';
 import Petal from '@/components/Petal';
 import HeartEffect from '@/components/HeartEffect';
 
@@ -30,7 +30,12 @@ export default function GameScreen() {
   const [currentPhrase, setCurrentPhrase] = useState<'loves-me' | 'loves-me-not'>('loves-me');
   const [petalCount, setPetalCount] = useState(0);
   const [startingPhrase, setStartingPhrase] = useState<'loves-me' | 'loves-me-not'>('loves-me');
-  
+  const [gameId, setGameId] = useState(0); // 🔄 Used to remount the daisy
+
+  const [playCount, setPlayCount] = useState(0);
+  const [lovesMeCount, setLovesMeCount] = useState(0);
+  const [lovesMeNotCount, setLovesMeNotCount] = useState(0);
+
   const centerScale = useSharedValue(1);
   const titleOpacity = useSharedValue(1);
 
@@ -41,19 +46,20 @@ export default function GameScreen() {
   const initializeGame = () => {
     const numPetals = Math.floor(Math.random() * 9) + 8;
     const randomStartingPhrase: 'loves-me' | 'loves-me-not' = Math.random() < 0.5 ? 'loves-me' : 'loves-me-not';
-    
+
     const newPetals: PetalData[] = Array.from({ length: numPetals }, (_, index) => ({
       id: `petal-${index}`,
       angle: (360 / numPetals) * index,
       isPlucked: false,
     }));
-    
+
     setPetals(newPetals);
     setPetalCount(numPetals);
     setGameState('playing');
     setCurrentPhrase(randomStartingPhrase);
     setStartingPhrase(randomStartingPhrase);
-    
+    setGameId(prev => prev + 1); // 🔁 Force re-render of petal view
+
     centerScale.value = withSpring(1);
     titleOpacity.value = withTiming(1);
   };
@@ -64,40 +70,28 @@ export default function GameScreen() {
     }
   };
 
-  const handleExport = () => {
-    if (Platform.OS === 'web') {
-      try {
-        const link = document.createElement('a');
-        link.href = '/loves-me-loves-me-not-app.zip';
-        link.download = 'loves-me-loves-me-not-app.zip';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error('Export failed:', error);
-      }
-    }
-  };
-
-  const handleIntegration = () => {
-    if (Platform.OS === 'web') {
-      window.open('https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository', '_blank');
-    }
-  };
-
   const pluckPetal = (petalId: string) => {
     if (gameState !== 'playing') return;
 
     triggerHaptics();
-    
-    setPetals(prev => prev.map(petal => 
-      petal.id === petalId ? { ...petal, isPlucked: true } : petal
-    ));
+
+    setPetals(prev =>
+      prev.map(petal =>
+        petal.id === petalId ? { ...petal, isPlucked: true } : petal
+      )
+    );
 
     const remainingPetals = petalCount - 1;
     setPetalCount(remainingPetals);
 
     if (remainingPetals === 0) {
+      setPlayCount(prev => prev + 1);
+      if (currentPhrase === 'loves-me') {
+        setLovesMeCount(prev => prev + 1);
+      } else {
+        setLovesMeNotCount(prev => prev + 1);
+      }
+
       setTimeout(() => {
         setGameState(currentPhrase);
         centerScale.value = withSequence(
@@ -106,8 +100,10 @@ export default function GameScreen() {
         );
       }, 500);
     } else {
-      setCurrentPhrase(prev => prev === 'loves-me' ? 'loves-me-not' : 'loves-me');
-      
+      setCurrentPhrase(prev =>
+        prev === 'loves-me' ? 'loves-me-not' : 'loves-me'
+      );
+
       centerScale.value = withSequence(
         withSpring(0.9, { duration: 200 }),
         withSpring(1, { duration: 200 })
@@ -127,7 +123,7 @@ export default function GameScreen() {
     if (gameState === 'loves-me') return 'They Love Me! 💕';
     if (gameState === 'loves-me-not') return 'They Love Me Not... 💔';
     if (gameState === 'ready') return 'Tap a petal to start!';
-    return currentPhrase === 'loves-me' ? 'Loves Me...' : "Loves Me Not...";
+    return currentPhrase === 'loves-me' ? 'Loves Me...' : 'Loves Me Not...';
   };
 
   const getTextColor = () => {
@@ -142,17 +138,7 @@ export default function GameScreen() {
         colors={['#FDF2F8', '#FCE7F3', '#FBBF24']}
         style={StyleSheet.absoluteFillObject}
       />
-      
-      {/* Top Right Action Buttons */}
-      <View style={styles.topRightButtons}>
-        <TouchableOpacity style={styles.actionButton} onPress={handleExport}>
-          <Download size={20} color="#E11D48" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton} onPress={handleIntegration}>
-          <Github size={20} color="#E11D48" />
-        </TouchableOpacity>
-      </View>
-      
+
       <View style={styles.header}>
         <Animated.Text style={[styles.title, titleAnimatedStyle]}>
           Loves Me, Loves Me Not
@@ -162,9 +148,7 @@ export default function GameScreen() {
         </Text>
         {gameState === 'playing' && (
           <>
-            <Text style={styles.petalCount}>
-              {petalCount} petals remaining
-            </Text>
+            <Text style={styles.petalCount}>{petalCount} petals remaining</Text>
             <Text style={styles.startingInfo}>
               Starting with: {startingPhrase === 'loves-me' ? 'Loves Me' : 'Loves Me Not'}
             </Text>
@@ -173,7 +157,7 @@ export default function GameScreen() {
       </View>
 
       <View style={styles.gameArea}>
-        <View style={styles.daisyContainer}>
+        <View key={gameId} style={styles.daisyContainer}>
           {petals.map((petal) => (
             <Petal
               key={petal.id}
@@ -185,8 +169,9 @@ export default function GameScreen() {
               daisySize={DAISY_SIZE}
             />
           ))}
-          
-          <Animated.View style={[styles.daisyCenter, centerAnimatedStyle]}>
+
+          {/* New wrapper for daisyCenter to cast shadow efficiently */}
+          <Animated.View style={[styles.daisyCenterWrapper, centerAnimatedStyle]}>
             <LinearGradient
               colors={['#FCD34D', '#F59E0B', '#D97706']}
               style={styles.centerGradient}
@@ -195,6 +180,13 @@ export default function GameScreen() {
             </LinearGradient>
           </Animated.View>
         </View>
+
+        <View style={styles.tallyContainer}>
+        <Text style={{ fontSize: 14, color: '#6B7280', fontFamily: 'Poppins-Regular', textAlign: 'center' }}>
+          ❤️ Played: {playCount} {"\n"}
+          💘 Loves Me: {lovesMeCount} | 💔 Loves Me Not: {lovesMeNotCount}
+        </Text>
+      </View>
 
         {gameState === 'loves-me' && <HeartEffect type="celebration" />}
         {gameState === 'loves-me-not' && <HeartEffect type="broken" />}
@@ -212,32 +204,10 @@ export default function GameScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  topRightButtons: {
-    position: 'absolute',
-    top: 60,
-    right: 20,
-    flexDirection: 'row',
-    gap: 12,
-    zIndex: 1000,
-  },
-  actionButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: 'rgba(225, 29, 72, 0.2)',
-  },
+  container: { flex: 1 },
+  // Removed: topRightButtons style
+  // Removed: actionButton style
+
   header: {
     alignItems: 'center',
     paddingTop: 20,
@@ -281,20 +251,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  daisyCenter: {
+  // Modified daisyCenter to be the inner element (no shadow)
+  daisyCenterWrapper: { // NEW: This wrapper will cast the shadow
     position: 'absolute',
     width: CENTER_SIZE,
     height: CENTER_SIZE,
     borderRadius: CENTER_SIZE / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // Move shadow styles here
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    // Add opaque background for shadow calculation
+    backgroundColor: '#FCD34D', // Match the primary color of the gradient for seamless look
+    overflow: 'hidden', // Crucial for shadow to respect borderRadius
+    justifyContent: 'center', // Keep content centered
+    alignItems: 'center',   // Keep content centered
   },
-  centerGradient: {
+  centerGradient: { // This is now inside daisyCenterWrapper
     width: '100%',
     height: '100%',
     borderRadius: CENTER_SIZE / 2,
@@ -324,5 +299,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
+  },
+  tallyContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+    alignItems: 'center',
   },
 });
